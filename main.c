@@ -3,9 +3,9 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include "lib/vec3.h"
-#include "lib/color.h"
-#include "lib/ray.h"
+#include "vec3.h"
+#include "color.h"
+#include "ray.h"
 
 double hit_sphere(point3 center, double radius, ray r)
 {

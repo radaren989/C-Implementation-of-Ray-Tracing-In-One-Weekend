@@ -1,5 +1,5 @@
 #pragma once
-#include "lib/vec3.h"
+#include "vec3.h"
 
 typedef struct
 {

@@ -17,7 +17,7 @@ clean:
 
 fresh:
 	echo "Cleaning all"
-	-rm $(OBJFILES) $(TARGET) $(DESTINATION)
+	-rm $(OBJFILES) $(TARGET) $(DESTINATION) $(ERRORFILE)
 
 render: fresh all
 	echo "Rendering..."
