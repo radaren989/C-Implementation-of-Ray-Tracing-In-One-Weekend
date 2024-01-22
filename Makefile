@@ -3,6 +3,7 @@ LDFLAGS = -lm
 TARGET = main
 OBJFILES = main.o vec3.o color.o ray.o
 DESTINATION = image.ppm
+ERRORFILE = err.txt
 
 all: $(TARGET)
 
@@ -16,8 +17,8 @@ clean:
 
 fresh:
 	echo "Cleaning all"
-	rm $(OBJFILES) $(TARGET) $(DESTINATION)
+	-rm $(OBJFILES) $(TARGET) $(DESTINATION)
 
-render: all
+render: fresh all
 	echo "Rendering..."
-	./$(TARGET) > $(DESTINATION) 
+	./$(TARGET) 1> $(DESTINATION) 2> $(ERRORFILE) 

@@ -1,13 +1,42 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
+#include <stdbool.h>
 
-#include "vec3.h"
-#include "color.h"
-#include "ray.h"
+#include "lib/vec3.h"
+#include "lib/color.h"
+#include "lib/ray.h"
+
+double hit_sphere(point3 center, double radius, ray r)
+{
+	vec3 oc = vec3_subtr_vec(r.origin, center);
+	double a = vec3_length_squared(r.direction);
+	double half_b = vec3_dot(r.direction, oc);
+	double c = vec3_length_squared(oc) - radius * radius;
+	double discriminant = half_b * half_b - a * c;
+
+	if (discriminant < 0)
+	{
+		return -1.0;
+	}
+	else
+	{
+		return (-half_b - sqrt(discriminant)) / a;
+	}
+}
 
 color ray_color(ray r)
 {
+	double t = hit_sphere((point3){0, 0, -1}, .5, r);
+
+	fprintf(stderr, "%f\n", t);
+	fflush(stderr);
+
+	if (t > 0.0)
+	{
+		vec3 N = vec3_unit(vec3_subtr_vec(ray_at(r, t), (vec3){0, 0, -1}));
+		return vec3_mult((color){N.x + 1, N.y + 1, N.z + 1}, .5);
+	}
 	vec3 unit_direction = vec3_unit(r.direction);
 	double a = .5 * (unit_direction.y + 1.0);
 	// blendVal = (1-a)*startVal + a*endVal

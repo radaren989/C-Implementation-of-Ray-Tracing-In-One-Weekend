@@ -22,3 +22,4 @@ vec3 vec3_mult_vec(vec3 u, vec3 v);
 double vec3_dot(vec3 u, vec3 v);
 vec3 vec3_cross(vec3 u, vec3 v);
 vec3 vec3_unit(vec3 u);
+double vec3_length_squared(vec3 u);

@@ -1,5 +1,5 @@
 #pragma once
-#include "vec3.h"
+#include "lib/vec3.h"
 
 typedef vec3 color;
 

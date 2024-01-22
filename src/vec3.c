@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "../lib/vec3.h"
 #include <math.h>
 
 vec3 vec3_create(double x, double y, double z)
@@ -78,4 +78,9 @@ vec3 vec3_cross(vec3 u, vec3 v)
 vec3 vec3_unit(vec3 u)
 {
 	return vec3_div(u, vec3_length(u));
+}
+
+double vec3_length_squared(vec3 u)
+{
+	return ((u.x * u.x + u.y * u.y + u.z * u.z));
 }
