@@ -8,7 +8,7 @@ vec3 vec3_create(double x, double y, double z)
 
 double vec3_length(vec3 u)
 {
-	return sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
+	return sqrt(vec3_length_squared(u));
 };
 
 vec3 vec3_inc(vec3 u)
@@ -82,7 +82,7 @@ vec3 vec3_unit(vec3 u)
 
 double vec3_length_squared(vec3 u)
 {
-	return ((u.x * u.x + u.y * u.y + u.z * u.z));
+	return vec3_dot(u, u);
 }
 
 vec3 vec3_reversed(vec3 u)
