@@ -19,6 +19,21 @@ fresh:
 	echo "Cleaning all"
 	-rm $(OBJFILES) $(TARGET) $(DESTINATION) $(ERRORFILE)
 
+
 render: fresh all
 	echo "Rendering..."
+	./$(TARGET) 1> $(DESTINATION)
+
+debug: fresh all
+	echo "Debug..."
 	./$(TARGET) 1> $(DESTINATION) 2> $(ERRORFILE) 
+
+test:
+	gcc -c a.c a.o
+	gcc -c list.c list.o
+	gcc -c utils.c utils.o
+	gcc -c sphere.c sphere.o
+	gcc -o a a.o list.o utils.o sphere.o -lm
+
+clrtest:
+	-rm a a.o list.o sphere.o utils.o

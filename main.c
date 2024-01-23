@@ -21,16 +21,13 @@ double hit_sphere(point3 center, double radius, ray r)
 	}
 	else
 	{
-		return (-half_b - sqrt(discriminant)) / a;
+		return (-half_b + sqrt(discriminant)) / a;
 	}
 }
 
 color ray_color(ray r)
 {
 	double t = hit_sphere((point3){0, 0, -1}, .5, r);
-
-	fprintf(stderr, "%f\n", t);
-	fflush(stderr);
 
 	if (t > 0.0)
 	{

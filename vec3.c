@@ -84,3 +84,8 @@ double vec3_length_squared(vec3 u)
 {
 	return ((u.x * u.x + u.y * u.y + u.z * u.z));
 }
+
+vec3 vec3_reversed(vec3 u)
+{
+	return (vec3){-u.x, -u.y, -u.z};
+}
