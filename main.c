@@ -16,8 +16,10 @@ int main()
 	struct node *world = NULL;
 	sphere sph1 = {SPHERE_TYPE, vec3_create(0, 0, -1), .5};
 	sphere sph2 = {SPHERE_TYPE, vec3_create(0, -101, -1), 100};
+	sphere sph3 = {SPHERE_TYPE, vec3_create(15, 15, -20), 10};
 	insertAtBeginning(&world, &sph1);
 	insertAtBeginning(&world, &sph2);
+	insertAtBeginning(&world, &sph3);
 
 	// render
 	camera_render(&cam, world);
