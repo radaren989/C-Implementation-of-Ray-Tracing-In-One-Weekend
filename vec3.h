@@ -24,3 +24,7 @@ vec3 vec3_cross(vec3 u, vec3 v);
 vec3 vec3_unit(vec3 u);
 double vec3_length_squared(vec3 u);
 vec3 vec3_reversed(vec3 u);
+vec3 vec3_random();
+vec3 vec3_random_in(double min, double max);
+vec3 vec3_random_in_unit_sphere();
+vec3 random_on_hemisphere(vec3 normal);

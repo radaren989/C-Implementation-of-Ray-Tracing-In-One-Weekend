@@ -1,5 +1,9 @@
 #include "vec3.h"
+
 #include <math.h>
+#include "utils.h"
+
+#include <stdio.h>
 
 vec3 vec3_create(double x, double y, double z)
 {
@@ -78,7 +82,7 @@ vec3 vec3_cross(vec3 u, vec3 v)
 vec3 vec3_unit(vec3 u)
 {
 	return vec3_div(u, vec3_length(u));
-}
+};
 
 double vec3_length_squared(vec3 u)
 {
@@ -88,4 +92,40 @@ double vec3_length_squared(vec3 u)
 vec3 vec3_reversed(vec3 u)
 {
 	return (vec3){-u.x, -u.y, -u.z};
+}
+
+vec3 vec3_random()
+{
+
+	return (vec3){random_double(), random_double(), random_double()};
+}
+
+vec3 vec3_random_in(double min, double max)
+{
+	return (vec3){random_double_in(min, max), random_double_in(min, max), random_double_in(min, max)};
+}
+
+vec3 vec3_random_in_unit_sphere()
+{
+	while (1)
+	{
+		vec3 p = vec3_random_in(-1, 1);
+
+		if (vec3_length_squared(p) < 1)
+			return p;
+	}
+}
+
+vec3 vec3_random_unit()
+{
+	return vec3_unit(vec3_random_in_unit_sphere());
+}
+
+vec3 random_on_hemisphere(vec3 normal)
+{
+	vec3 on_unit_sphere = vec3_random_unit();
+	if (vec3_dot(on_unit_sphere, normal) > 0.0)
+		return on_unit_sphere;
+	else
+		return vec3_reversed(on_unit_sphere);
 }

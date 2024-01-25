@@ -2,6 +2,17 @@
 
 void camera_init(camera *cam)
 {
+  if (!cam->aspect_ratio)
+    cam->aspect_ratio = 1.0;
+  if (!cam->image_width)
+    cam->image_width = 100;
+
+  if (!cam->samples_per_pixel)
+    cam->samples_per_pixel = 10;
+
+  if (!cam->max_depth)
+    cam->max_depth = 10;
+
   // Calculate the image height, and ensure that it's at least 1.
   cam->image_height = (int)(cam->image_width / cam->aspect_ratio);
   cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
@@ -34,7 +45,7 @@ void camera_render(camera *cam, struct node *world)
 
   printf("P3\n%d %d\n255\n", cam->image_width, cam->image_height);
 
-  const int height = cam->image_height, width = cam->image_width;
+  const int height = cam->image_height, width = cam->image_width, num_samples = cam->samples_per_pixel;
   register int h, w;
   for (h = 0; h < height; h++)
   {
@@ -42,19 +53,39 @@ void camera_render(camera *cam, struct node *world)
     fflush(stderr);
     for (w = 0; w < width; w++)
     {
-      // pixel00_loc + (i * viewport_u) + (j * viewport_v)
-      vec3 pixel_center = vec3_add_vec(cam->pixel00_loc, vec3_add_vec(vec3_mult(cam->pixel_delta_u, w), vec3_mult(cam->pixel_delta_v, h)));
-      vec3 ray_direction = vec3_subtr_vec(pixel_center, cam->center);
-      ray r = {pixel_center, ray_direction};
-
-      color pixel_color = ray_color(r, world);
-      color_write(stdout, pixel_color);
+      color pixel_color = {0, 0, 0};
+      for (int s = 0; s < num_samples; s++)
+      {
+        ray r = get_ray(w, h, cam);
+        pixel_color = vec3_add_vec(pixel_color, ray_color(r, cam->max_depth, world));
+      }
+      color_write(stdout, pixel_color, num_samples);
     }
   }
 
   fprintf(stderr, "\rDone      \n");
   freelist(world);
   fflush(stderr);
+}
+
+ray get_ray(int w, int h, camera *cam)
+{
+  // pixel00_loc + (i * viewport_u) + (j * viewport_v)
+  vec3 pixel_center = vec3_add_vec(cam->pixel00_loc, vec3_add_vec(vec3_mult(cam->pixel_delta_u, w), vec3_mult(cam->pixel_delta_v, h)));
+  vec3 pixel_sample = vec3_add_vec(pixel_center, pixel_sample_square(cam));
+
+  vec3 ray_origin = cam->center;
+  vec3 ray_direction = vec3_subtr_vec(pixel_sample, ray_origin);
+
+  return (ray){ray_origin, ray_direction};
+}
+
+vec3 pixel_sample_square(camera *cam)
+{
+  double px = -0.5 + random_double();
+  double py = -0.5 + random_double();
+
+  return vec3_add_vec(vec3_mult(cam->pixel_delta_u, px), vec3_mult(cam->pixel_delta_v, py));
 }
 
 bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_record *rec)
@@ -79,12 +110,18 @@ bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_
   return hit_anything;
 }
 
-color ray_color(ray r, struct node *world)
+color ray_color(ray r, int depth, struct node *world)
 {
   hit_record rec;
-  if (world_hit(r, 0, INFINITY, world, &rec))
+
+  if (depth <= 0)
   {
-    return vec3_mult(vec3_add_vec(rec.normal, (color){1, 1, 1}), 0.5);
+    return (color){0, 0, 0};
+  }
+  if (world_hit(r, 0.001, INFINITY, world, &rec))
+  {
+    vec3 direction = random_on_hemisphere(rec.normal);
+    return vec3_mult(ray_color((ray){rec.p, direction}, depth - 1, world), 0.5);
   }
 
   vec3 unit_direction = vec3_unit(r.direction);
