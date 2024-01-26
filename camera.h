@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include "vec3.h"
 #include "utils.h"
-#include "hit.h"
 #include "color.h"
-
+#include "hit.h"
+#include "material.h"
 typedef struct
 {
   double aspect_ratio;

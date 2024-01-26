@@ -120,8 +120,12 @@ color ray_color(ray r, int depth, struct node *world)
   }
   if (world_hit(r, 0.001, INFINITY, world, &rec))
   {
-    vec3 direction = random_on_hemisphere(rec.normal);
-    return vec3_mult(ray_color((ray){rec.p, direction}, depth - 1, world), 0.5);
+    ray scattered;
+    color attenuation;
+    if (rec.mat->scatter(r, rec, attenuation, scattered))
+      return vec3_mult_vec(attenuation, ray_color(scattered, depth - 1, world));
+
+    return (color){0, 0, 0};
   }
 
   vec3 unit_direction = vec3_unit(r.direction);

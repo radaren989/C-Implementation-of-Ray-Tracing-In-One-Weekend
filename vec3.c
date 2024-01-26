@@ -1,10 +1,5 @@
 #include "vec3.h"
 
-#include <math.h>
-#include "utils.h"
-
-#include <stdio.h>
-
 vec3 vec3_create(double x, double y, double z)
 {
 	return (vec3){x, y, z};
@@ -128,4 +123,15 @@ vec3 random_on_hemisphere(vec3 normal)
 		return on_unit_sphere;
 	else
 		return vec3_reversed(on_unit_sphere);
+}
+
+bool vec3_near_zero(vec3 u)
+{
+	const double s = 1e-8;
+	return (fabs(u.x) < s) && (fabs(u.y) < s) && (fabs(u.z) < s);
+}
+
+vec3 vec3_reflect(vec3 u, vec3 n)
+{
+	return vec3_subtr_vec(u, vec3_mult(vec3_mult(n, vec3_dot(u, n)), -2));
 }

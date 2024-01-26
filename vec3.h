@@ -1,6 +1,11 @@
 #pragma once
 
-typedef struct
+#include <math.h>
+#include <stdbool.h>
+
+#include "utils.h"
+
+typedef struct vec3
 {
 	double x;
 	double y;
@@ -26,5 +31,10 @@ double vec3_length_squared(vec3 u);
 vec3 vec3_reversed(vec3 u);
 vec3 vec3_random();
 vec3 vec3_random_in(double min, double max);
+vec3 vec3_random_unit();
 vec3 vec3_random_in_unit_sphere();
 vec3 random_on_hemisphere(vec3 normal);
+bool vec3_near_zero(vec3 u);
+vec3 vec3_reflect(vec3 u, vec3 n);
+
+#include "ray.h"

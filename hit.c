@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 
-bool is_hit(void *obj, ray r, double ray_tmin, double ray_tmax, hit_record *rec)
+bool is_hit(void *obj, ray r, double ray_tmin, double ray_tmax, material *mat, hit_record *rec)
 {
   switch (determine_object(obj))
   {
   case SPHERE_TYPE:
 
     sphere sph = *(sphere *)obj;
-    return hit_sphere(r, sph, ray_tmin, ray_tmax, rec);
+    return hit_sphere(r, sph, ray_tmin, ray_tmax, mat, rec);
     break;
   default:
     return false;
@@ -18,7 +18,7 @@ bool is_hit(void *obj, ray r, double ray_tmin, double ray_tmax, hit_record *rec)
   }
 }
 
-bool hit_sphere(ray r, sphere sph, double ray_tmin, double ray_tmax, hit_record *rec)
+bool hit_sphere(ray r, sphere sph, double ray_tmin, double ray_tmax, material *mat, hit_record *rec)
 {
   vec3 oc = vec3_subtr_vec(r.origin, sph.center);
   double a = vec3_length_squared(r.direction);
@@ -42,6 +42,7 @@ bool hit_sphere(ray r, sphere sph, double ray_tmin, double ray_tmax, hit_record 
   rec->p = ray_at(r, root);
   vec3 outward_normal = vec3_div(vec3_subtr_vec(rec->p, sph.center), sph.radius);
   hit_set_face_normal(r, outward_normal, rec);
+  rec->mat = mat;
 
   return true;
 }

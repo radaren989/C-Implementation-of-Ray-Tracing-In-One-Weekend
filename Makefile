@@ -1,7 +1,7 @@
 CC = gcc
 LDFLAGS = -lm
 TARGET = main
-OBJFILES = main.o vec3.o color.o ray.o utils.o list.o sphere.o hit.o camera.o
+OBJFILES = main.o vec3.o color.o ray.o utils.o list.o material.o sphere.o hit.o camera.o 
 DESTINATION = image.ppm
 ERRORFILE = err.txt
 
