@@ -98,7 +98,7 @@ bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_
   while (current != NULL)
   {
 
-    if (is_hit(current->ptr, r, ray_tmin, cloesest_so_far, &temp_rec))
+    if (is_hit(current->ptr, r, ray_tmin, cloesest_so_far, rec->mat, &temp_rec))
     {
       hit_anything = true;
       cloesest_so_far = temp_rec.t;
@@ -122,8 +122,10 @@ color ray_color(ray r, int depth, struct node *world)
   {
     ray scattered;
     color attenuation;
-    if (rec.mat->scatter(r, rec, attenuation, scattered))
+    if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered))
+    {
       return vec3_mult_vec(attenuation, ray_color(scattered, depth - 1, world));
+    }
 
     return (color){0, 0, 0};
   }

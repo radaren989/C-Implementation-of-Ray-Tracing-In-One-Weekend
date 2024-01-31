@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sphere.h"
 #include <stdbool.h>
+#include "sphere.h"
 #include "utils.h"
 #include "material.h"
 

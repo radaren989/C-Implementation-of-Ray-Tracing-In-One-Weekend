@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include "color.h"
-#include <math.h>
 
 double linear_to_gamma(double linear_component)
 {

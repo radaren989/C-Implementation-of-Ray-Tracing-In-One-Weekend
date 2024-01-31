@@ -1,4 +1,5 @@
 #include "vec3.h"
+#include "utils.h"
 
 vec3 vec3_create(double x, double y, double z)
 {

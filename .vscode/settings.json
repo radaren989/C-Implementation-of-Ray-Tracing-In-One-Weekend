@@ -1,11 +1,13 @@
 {
-  "files.associations": {
-    "*.tcc": "c",
-    "cmath": "c",
-    "random": "c",
-    "numbers": "c",
-    "stdio.h": "c",
-    "hit.h": "c"
-  },
-  "C_Cpp.errorSquiggles": "disabled"
+    "files.associations": {
+        "*.tcc": "c",
+        "cmath": "c",
+        "random": "c",
+        "numbers": "c",
+        "stdio.h": "c",
+        "hit.h": "c",
+        "math.h": "c",
+        "vec3.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

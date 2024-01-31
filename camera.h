@@ -1,11 +1,12 @@
 #pragma once
+
 #include <stdio.h>
 #include <stdbool.h>
-#include "vec3.h"
 #include "utils.h"
 #include "color.h"
-#include "hit.h"
 #include "material.h"
+#include "hit.h"
+
 typedef struct
 {
   double aspect_ratio;

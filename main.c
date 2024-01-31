@@ -25,10 +25,10 @@ int main()
 
 	// world build
 	struct node *world = NULL;
-	sphere sph2 = {SPHERE_TYPE, vec3_create(0, -101, -1), 100, &ground};
-	sphere sph1 = {SPHERE_TYPE, vec3_create(0, 0, -1), .5, &center};
-	sphere sph3 = {SPHERE_TYPE, vec3_create(-1, 0, -1), .5, &left};
-	sphere sph4 = {SPHERE_TYPE, vec3_create(1, -101, -1), .5, &right};
+	sphere sph2 = {SPHERE_TYPE, vec3_create(0, -101, -1), 100, ground};
+	sphere sph1 = {SPHERE_TYPE, vec3_create(0, 0, -1), .5, center};
+	sphere sph3 = {SPHERE_TYPE, vec3_create(-1, 0, -1), .5, left};
+	sphere sph4 = {SPHERE_TYPE, vec3_create(1, -101, -1), .5, right};
 	insertAtBeginning(&world, &sph1);
 	insertAtBeginning(&world, &sph2);
 	insertAtBeginning(&world, &sph3);
