@@ -107,8 +107,9 @@ vec3 vec3_random_in_unit_sphere()
 	{
 		vec3 p = vec3_random_in(-1, 1);
 
-		if (vec3_length_squared(p) < 1)
-			return p;
+		if (vec3_length(p) >= 1)
+			continue;
+		return p;
 	}
 }
 
@@ -134,5 +135,5 @@ bool vec3_near_zero(vec3 u)
 
 vec3 vec3_reflect(vec3 u, vec3 n)
 {
-	return vec3_subtr_vec(u, vec3_mult(vec3_mult(n, vec3_dot(u, n)), -2));
+	return vec3_subtr_vec(u, vec3_mult(n, 2 * vec3_dot(u, n)));
 }

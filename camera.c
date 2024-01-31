@@ -57,7 +57,7 @@ void camera_render(camera *cam, struct node *world)
       for (int s = 0; s < num_samples; s++)
       {
         ray r = get_ray(w, h, cam);
-        pixel_color = vec3_add_vec(pixel_color, ray_color(r, cam->max_depth, world));
+        pixel_color = vec3_add_vec(pixel_color, ray_color(&r, cam->max_depth, world));
       }
       color_write(stdout, pixel_color, num_samples);
     }
@@ -98,7 +98,7 @@ bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_
   while (current != NULL)
   {
 
-    if (is_hit(current->ptr, r, ray_tmin, cloesest_so_far, rec->mat, &temp_rec))
+    if (is_hit(current->ptr, r, ray_tmin, cloesest_so_far, &temp_rec))
     {
       hit_anything = true;
       cloesest_so_far = temp_rec.t;
@@ -110,7 +110,7 @@ bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_
   return hit_anything;
 }
 
-color ray_color(ray r, int depth, struct node *world)
+color ray_color(ray *r, int depth, struct node *world)
 {
   hit_record rec;
 
@@ -118,19 +118,19 @@ color ray_color(ray r, int depth, struct node *world)
   {
     return (color){0, 0, 0};
   }
-  if (world_hit(r, 0.001, INFINITY, world, &rec))
+  if (world_hit(*r, 0.001, INFINITY, world, &rec))
   {
     ray scattered;
     color attenuation;
+
     if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered))
     {
-      return vec3_mult_vec(attenuation, ray_color(scattered, depth - 1, world));
+      return vec3_mult_vec(attenuation, ray_color(&scattered, depth - 1, world));
     }
-
     return (color){0, 0, 0};
   }
 
-  vec3 unit_direction = vec3_unit(r.direction);
+  vec3 unit_direction = vec3_unit(r->direction);
   double a = .5 * (unit_direction.y + 1.0);
   // blendVal = (1-a)*startVal + a*endVal
   return vec3_add_vec(vec3_mult((color){1.0, 1.0, 1.0}, (1.0 - a)), vec3_mult((color){0.5, 0.7, 1.0}, a));
