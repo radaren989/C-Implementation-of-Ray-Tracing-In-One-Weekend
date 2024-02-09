@@ -1,0 +1,75 @@
+#include <stdio.h>
+
+#include "utils.h"
+#include "list.h"
+
+#include "camera.h"
+#include "color.h"
+#include "material.h"
+#include "sphere.h"
+#include "vec3.h"
+
+int main()
+{
+	// cam settings
+	camera cam;
+	cam.aspect_ratio = 16.0 / 9.0;
+	cam.image_width = 1200;
+	cam.samples_per_pixel = 500;
+	cam.max_depth = 50;
+
+  cam.vfov = 20;
+  cam.lookfrom = (point3){13,2,3};
+  cam.lookat = (point3){0,0,0};
+  cam.vup = (vec3){0,1,0};
+
+	// material
+
+	// world build
+	struct node *world = NULL;
+  material ground = {lambertian_scatter, (color){.5, .5, .5}, 0};
+  sphere gnd = {SPHERE_TYPE, vec3_create(0, -1000, 0), 1000, ground};
+  insertAtBeginning(&world, &gnd);
+
+  for(int a = -11; a < 11; a++){
+    for(int b = -11; b < 11; b++){
+      double chosen_mat = random_double();
+      point3 center = {a+.9*random_double(),.2,b+.9*random_double()};
+      
+      if(vec3_length(vec3_subtr_vec(center, (point3){4,.2,0}))> .9){
+        material *mat = malloc(sizeof(material));
+        
+        if(chosen_mat < .7){
+          color albedo = {random_double(),random_double(),random_double()};
+          *mat = (material){lambertian_scatter, albedo,0};
+          sphere sph = {SPHERE_TYPE,center,.2, *mat};
+          insertAtBeginning(&world, &sph);
+        }
+        else{
+          color albedo = {random_double_in(.5,1),random_double_in(.5,1),random_double_in(.5,1)};
+          double fuzz = random_double_in(0,.5);
+          *mat = (material){metal_scatter, albedo,fuzz};
+          sphere sph = {SPHERE_TYPE, center, .2,*mat};
+          insertAtBeginning(&world, &sph);
+        }
+      }
+    }
+  }
+
+  material mat1 = {metal_scatter, (color){.5, .6, .7}, .7};
+  sphere sph1 = {SPHERE_TYPE, vec3_create(0, 1, 0), 1, mat1};
+  insertAtBeginning(&world, &sph1);
+
+  material mat2 = {lambertian_scatter, (color){.4, .2, .1}, 0};
+  sphere sph2 = {SPHERE_TYPE, vec3_create(-4, 1, 0), .1, mat2};
+  insertAtBeginning(&world, &sph2);
+  
+  material mat3 = {metal_scatter, (color){.7, .6, .5}, 0};
+  sphere sph3 = {SPHERE_TYPE, vec3_create(4, 1, 0), 1, mat3};
+	insertAtBeginning(&world, &sph3);
+
+	// render
+	camera_render(&cam, world);
+
+	return 0;
+}

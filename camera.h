@@ -19,6 +19,10 @@ typedef struct
   point3 pixel00_loc;
   vec3 pixel_delta_u;
   vec3 pixel_delta_v;
+  point3 lookfrom;
+  point3 lookat;
+  vec3 vup;
+  vec3 u,v,w;
 } camera;
 
 void camera_init(camera *cam);

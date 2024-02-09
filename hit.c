@@ -40,7 +40,7 @@ bool hit_sphere(ray r, sphere sph, double ray_tmin, double ray_tmax, hit_record 
 
   rec->t = root;
   rec->p = ray_at(r, root);
-  rec->mat = &sph.mat;
+  rec->mat = sph.mat;
   vec3 outward_normal = vec3_div(vec3_subtr_vec(rec->p, sph.center), sph.radius);
   hit_set_face_normal(r, outward_normal, rec);
 

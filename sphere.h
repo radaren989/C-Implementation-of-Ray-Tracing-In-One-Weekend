@@ -9,7 +9,7 @@ typedef struct sphere
   uint8_t type; // to determine in the hittable list
   point3 center;
   double radius;
-  material mat;
+  material *mat;
 } sphere;
 
 #include "hit.h"
