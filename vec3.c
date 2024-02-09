@@ -93,12 +93,14 @@ vec3 vec3_reversed(vec3 u)
 vec3 vec3_random()
 {
 
-	return (vec3){random_double(), random_double(), random_double()};
+  vec3 v = {random_double(), random_double(), random_double()};
+  return v;
 }
 
 vec3 vec3_random_in(double min, double max)
 {
-	return (vec3){random_double_in(min, max), random_double_in(min, max), random_double_in(min, max)};
+  vec3 v = {random_double_in(min, max), random_double_in(min, max), random_double_in(min, max)};
+  return v;
 }
 
 vec3 vec3_random_in_unit_sphere()

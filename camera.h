@@ -14,6 +14,7 @@ typedef struct
   int image_height;
   int samples_per_pixel;
   int max_depth;
+  double vfov;
   point3 center;
   point3 pixel00_loc;
   vec3 pixel_delta_u;

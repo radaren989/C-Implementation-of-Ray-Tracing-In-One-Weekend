@@ -1,4 +1,5 @@
 #include "color.h"
+#include "utils.h"
 
 double linear_to_gamma(double linear_component)
 {
@@ -20,7 +21,11 @@ void color_write(FILE *out, color pixel, int samples_per_pixel)
   g = linear_to_gamma(g);
   b = linear_to_gamma(b);
 
-  fprintf(out, "%d %d %d\n", (int)(255 * r), (int)(255 * g), (int)(255 * b));
+  r = clamp(r, 0.0, 1.0) * 255;
+  g = clamp(g, 0.0, 1.0) * 255;
+  b = clamp(b, 0.0, 1.0) * 255;
+
+  fprintf(out, "%d %d %d\n", (int)r, (int)g, (int) b);
   return;
 };
 

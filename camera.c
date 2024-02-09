@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "camera.h"
+#include "utils.h"
 
 void camera_init(camera *cam)
 {
@@ -12,6 +14,9 @@ void camera_init(camera *cam)
 
   if (!cam->max_depth)
     cam->max_depth = 10;
+  
+  if(!cam->vfov)
+    cam->vfov = 90;
 
   // Calculate the image height, and ensure that it's at least 1.
   cam->image_height = (int)(cam->image_width / cam->aspect_ratio);
@@ -21,7 +26,9 @@ void camera_init(camera *cam)
 
   // determine viewport dimensions
   double focal_length = 1.0;
-  double viewport_height = 2.0;
+  double theta = degrees_to_radians(cam->vfov);
+  double h = tan(theta/2);
+  double viewport_height = 2.0 * h * focal_length;
   double viewport_width = viewport_height * ((double)(cam->image_width) / cam->image_height);
 
   // Calculate the vectors across the horizontal and down the vertical viewport edges.
@@ -125,6 +132,8 @@ color ray_color(ray *r, int depth, struct node *world)
 
     if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered))
     {
+      //fprintf(stderr,"color-> x: %f y:%f, z:%f\n",attenuation.x,attenuation.y,attenuation.z);
+      //fprintf(stderr,"ray-> x: %f y:%f, z:%f\n",scattered.origin.x,scattered.origin.y,scattered.origin.z);
       return vec3_mult_vec(attenuation, ray_color(&scattered, depth - 1, world));
     }
     return (color){0, 0, 0};
