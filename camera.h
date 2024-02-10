@@ -26,8 +26,8 @@ typedef struct
 } camera;
 
 void camera_init(camera *cam);
-void camera_render(camera *cam, struct node *world);
-bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_record *rec);
-color ray_color(ray *r, int depth, struct node *world);
+void camera_render(camera *cam, sphere world[], int size);
+bool world_hit(ray r, double ray_tmin, double ray_tmax, sphere world[], int size, hit_record *rec);
+color ray_color(ray *r, int depth, sphere world[], int size);
 ray get_ray(int w, int h, camera *cam);
 vec3 pixel_sample_square(camera *cam);

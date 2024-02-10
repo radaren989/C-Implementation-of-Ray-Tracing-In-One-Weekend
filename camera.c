@@ -53,7 +53,7 @@ void camera_init(camera *cam)
   cam->pixel00_loc = vec3_add_vec(viewport_upper_left, vec3_mult(vec3_add_vec(cam->pixel_delta_u, cam->pixel_delta_v), 0.5));
 }
 
-void camera_render(camera *cam, struct node *world)
+void camera_render(camera *cam, sphere world[], int size)
 {
   camera_init(cam);
 
@@ -71,14 +71,13 @@ void camera_render(camera *cam, struct node *world)
       for (int s = 0; s < num_samples; s++)
       {
         ray r = get_ray(w, h, cam);
-        pixel_color = vec3_add_vec(pixel_color, ray_color(&r, cam->max_depth, world));
+        pixel_color = vec3_add_vec(pixel_color, ray_color(&r, cam->max_depth, world,size));
       }
       color_write(stdout, pixel_color, num_samples);
     }
   }
 
   fprintf(stderr, "\rDone      \n");
-  freelist(world);
   fflush(stderr);
 }
 
@@ -102,29 +101,26 @@ vec3 pixel_sample_square(camera *cam)
   return vec3_add_vec(vec3_mult(cam->pixel_delta_u, px), vec3_mult(cam->pixel_delta_v, py));
 }
 
-bool world_hit(ray r, double ray_tmin, double ray_tmax, struct node *world, hit_record *rec)
+bool world_hit(ray r, double ray_tmin, double ray_tmax, sphere world[], int size, hit_record *rec)
 {
   hit_record temp_rec;
   bool hit_anything = false;
   double cloesest_so_far = ray_tmax;
-
-  struct node *current = world;
-  while (current != NULL)
-  {
-
-    if (is_hit(current->ptr, r, ray_tmin, cloesest_so_far, &temp_rec))
+  
+  register int i = 0;
+  for(; i < size; i++){
+    if (hit_sphere(r, world[i], ray_tmin, cloesest_so_far, &temp_rec))
     {
       hit_anything = true;
       cloesest_so_far = temp_rec.t;
       *rec = temp_rec;
     }
-    current = current->next;
   }
 
   return hit_anything;
 }
 
-color ray_color(ray *r, int depth, struct node *world)
+color ray_color(ray *r, int depth, sphere world[], int size)
 {
   hit_record rec;
 
@@ -132,7 +128,7 @@ color ray_color(ray *r, int depth, struct node *world)
   {
     return (color){0, 0, 0};
   }
-  if (world_hit(*r, 0.0001, INFINITY, world, &rec))
+  if (world_hit(*r, 0.0001, INFINITY, world,size, &rec))
   {
     ray scattered;
     color attenuation;
@@ -141,7 +137,7 @@ color ray_color(ray *r, int depth, struct node *world)
     {
       //fprintf(stderr,"color-> x: %f y:%f, z:%f\n",attenuation.x,attenuation.y,attenuation.z);
       //fprintf(stderr,"ray-> x: %f y:%f, z:%f\n",scattered.origin.x,scattered.origin.y,scattered.origin.z);
-      return vec3_mult_vec(attenuation, ray_color(&scattered, depth - 1, world));
+      return vec3_mult_vec(attenuation, ray_color(&scattered, depth - 1, world,size));
     }
     return (color){0, 0, 0};
   }
